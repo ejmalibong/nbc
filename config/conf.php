@@ -1,7 +1,7 @@
 <?php
 	$host = "localhost";
 	$uname = "root";
-	$pword = "";
+	$pword = "Nbc12#";
 	$db = "nbc";
 	
 	$conn = new mysqli($host, $uname, $pword, $db);
@@ -14,6 +14,25 @@
 	//if(isset($_GET['action']) && $_GET['action'] == 'print'){
 	//	require('fpdf.php');
 	//}
+	function generateTextFile($content, $transactionNo) {
+		$year = date("Y") . "/" . date("m");
+	
+		$directory = "./transactions/" . $year;
+		if (!is_dir($directory)) {
+			mkdir($directory, 0755, true);
+		}
+	
+		$timestamp = time();
+		$randomString = bin2hex(random_bytes(8)); 
+		$filename = $directory . "/" . $transactionNo . '_' . $timestamp . "_" . $randomString . ".txt";
+	
+		if (file_put_contents($filename, $content) !== false) {
+			return $filename;
+		} else {
+			return false;
+		}
+	}
+
 	function savelogs($transaction, $transdetails){
 		$host = "localhost";
 		$uname = "root";

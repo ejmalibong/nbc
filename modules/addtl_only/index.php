@@ -124,7 +124,7 @@
 										?>
 											<div class="row">
 												<div class="col-12"><br>
-													<table class="table">
+													<table class="table" <?= $row->green_mark > 0 ? 'style="background-color: #00FF00;"' : '' ?>>
 														<tbody>
 															<?php if($filename){ ?>
 																<tr>
@@ -255,11 +255,13 @@
 															$stmt = $conn->prepare("SELECT product_id, product_name, price, sum(qty) as xqty, sum(amount) as xamount, member_name, dttm, receipt FROM transactions WHERE user = ? and active = 1 GROUP BY product_id");
 															$stmt->bind_param("s", $_SESSION['nameinsta']);														
 														}
+														$_SESSION['items'] = [];
 														if($stmt->execute() === TRUE){
 															$total_qty = "0";
 															$result = $stmt->get_result();
 															if($result->num_rows > 0){
 																while($row = $result->fetch_object()){
+																	$_SESSION['items'][] = $row;
 																		$name = $row->member_name;
 																		$date = ddate($row->dttm);
 																		$receipt = $row->receipt;
@@ -386,6 +388,11 @@
 				}else{
 					alert("addtl_only", "Save succesful");
 				}
+				$text = 'Receipt: ' . $_SESSION['receipt']['orno'] . "\n";
+				$text .= 'RFID No.: ' .  $_SESSION['receipt']['rfid_no'] . "\n";
+				$text .= 'Total: ' .  $_SESSION['total'] . "\n";
+				$text .= 'Transaction:' . print_r($_SESSION['items'], true);
+				$filePath = generateTextFile($text, $_SESSION['receipt']['orno']);
 				$_SESSION['total'] = 0;
 				unset($_SESSION['receipt']);
 			}
@@ -432,7 +439,7 @@
 						alert("addtl_only?86d178a053b97f10a65771b2c1ff9621=".$_GET['86d178a053b97f10a65771b2c1ff9621']."&barcode=&qty=1&transact=&checkout=", "Not enough load.");
 						exit;
 					}
-					if($maxCredit < $row2->amt+($amount+$_SESSION['total']) && !isset($_GET['isload'])) {
+					if($maxCredit < ($row2->amt ?? 0)+($amount+$_SESSION['total']) && !isset($_GET['isload'])) {
 						alert("addtl_only?86d178a053b97f10a65771b2c1ff9621=".$_GET['86d178a053b97f10a65771b2c1ff9621']."&barcode=&qty=1&transact=&checkout=", "You will exceed to allowable amount: " . number_format(str_replace(",", "", $maxCredit), 2)) ;
 						exit;
 					}
