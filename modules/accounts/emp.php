@@ -191,12 +191,12 @@ if (isset($_POST['add']) && $access->emp_add == 1) {
 			exit;
 		}
 
-		$stmt = $conn->prepare("INSERT INTO members (max_credit, type, fname, mname, lname, address, department, position, rfid_no, qr_code, emp_no, section) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-		$stmt->bind_param("ssssssssssss", $_POST['max_credit'], $_POST['type'], $_POST['fname'], $_POST['mname'], $_POST['lname'], $_POST['address'], $_POST['department'], $_POST['position'], $_POST['rfid_no'], $_POST['qr_code'], $_POST['emp_no'], $_POST['section']);
+		$stmt = $conn->prepare("INSERT INTO members (green_mark, max_credit, type, fname, mname, lname, address, department, position, rfid_no, qr_code, emp_no, section) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		$stmt->bind_param("issssssssssss", $_POST['green_mark'], $_POST['max_credit'], $_POST['type'], $_POST['fname'], $_POST['mname'], $_POST['lname'], $_POST['address'], $_POST['department'], $_POST['position'], $_POST['rfid_no'], $_POST['qr_code'], $_POST['emp_no'], $_POST['section']);
 		if ($stmt->execute() === TRUE) {
 			if (!empty($image)) {
 				$targetDir = 'images/photos/';
-				if ($image['name'] == $existingImageName) {
+				if ($image['name'] == $_POST['rfid_no'] . '.jpg') {
 					// Delete the existing image.
 					unlink($targetDir . $_POST['rfid_no'] . '.jpg');
 				}
@@ -278,12 +278,12 @@ if (isset($_POST['update']) && $access->emp_edit == 1) {
 				echo $conn->error;
 			}
 		}
-		$stmt = $conn->prepare("UPDATE members SET max_credit = ?, balance = ?, type = ?, fname = ?, mname = ?, lname = ?, address = ?, department = ?, position = ?, emp_no = ?, section = ?, rfid_no = ?	where member_id = ?");
-		$stmt->bind_param("ssssssssssssi", $_POST['max_credit'], $_POST['balance'], $_POST['type'], $_POST['fname'], $_POST['mname'], $_POST['lname'], $_POST['address'], $_POST['department'], $_POST['position'], $_POST['emp_no'], $_POST['section'], $_POST['rfid_no'], $_SESSION['edit_id']);
+		$stmt = $conn->prepare("UPDATE members SET green_mark = ?, max_credit = ?, balance = ?, type = ?, fname = ?, mname = ?, lname = ?, address = ?, department = ?, position = ?, emp_no = ?, section = ?, rfid_no = ?	where member_id = ?");
+		$stmt->bind_param("issssssssssssi", $_POST['green_mark'], $_POST['max_credit'], $_POST['balance'], $_POST['type'], $_POST['fname'], $_POST['mname'], $_POST['lname'], $_POST['address'], $_POST['department'], $_POST['position'], $_POST['emp_no'], $_POST['section'], $_POST['rfid_no'], $_SESSION['edit_id']);
 		if ($stmt->execute() === TRUE) {
 			if (!empty($image['name'])) {
 				$targetDir = 'images/photos/';
-				if ($image['name'] == $existingImageName) {
+				if ($image['name'] == $_POST['rfid_no'] . '.jpg') {
 					// Delete the existing image.
 					unlink($targetDir . $_POST['rfid_no'] . '.jpg');
 				}

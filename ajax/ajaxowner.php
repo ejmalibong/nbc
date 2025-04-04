@@ -171,6 +171,14 @@ if (isset($_GET['add'])) {
 									</select>
 								</div>
 								<div class="form-group">
+									<label for="category" class="control-label mb-1">Green Mark<font color="red"> * </font></label>
+									<select required autofocus id="SelectLm" class="input-sm form-control-sm form-control" name="green_mark" required>
+										<option value="">Please select</option>
+										<option value="1">Yes</option>
+										<option value="0">No</option>
+									</select>
+								</div>
+								<div class="form-group">
 									<label for="category" class="control-label mb-1">Max Credit<font color="red"> * </font></label>
 									<input pattern="[.0-9,]*" type="text" autocomplete="off" name="max_credit" class="form-control  form-control-sm" required placeholder="Enter max credit." />
 								</div>
@@ -311,6 +319,14 @@ if (isset($_GET['val']) && isset($_GET['edit'])) {
 													} ?> value="Agency">Agency</option>
 										</select>
 									</div>
+									<div class="form-group">
+									<label for="category" class="control-label mb-1">Green Mark<font color="red"> * </font></label>
+									<select required autofocus id="SelectLm" class="input-sm form-control-sm form-control" name="green_mark" required>
+										<option value="">Please select</option>
+										<option <?php if ($res->green_mark == 1) { echo ' selected '; } ?> value="1">Yes</option>
+										<option <?php if ($res->green_mark == 0) { echo ' selected '; } ?> value="0">No</option>
+									</select>
+								</div>
 									<div class="form-group">
 										<input class="form-control" type="file" name="image" id="image" accept="image/*">
 									</div>
